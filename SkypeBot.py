@@ -32,6 +32,8 @@ known_users = {
    'browserofmetal' : 'Брауз',
    'ofelok' : 'Офелок',
    'mk777gif' : 'Ёж',
+   'pelmeshko-s' : 'Пельмешко',
+   'kallagen' : 'Адмирал',
 }
 users_been_greeted = set()
 chat = None
