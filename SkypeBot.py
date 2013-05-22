@@ -53,7 +53,7 @@ class SkypeBot(object):
          Log(message)
       
   def MessageStatus(self, msg, status):
-   if msg.Chat.Name == testname and status == Skype4Py.cmsReceived:
+   if msg.Chat.Name == chatname and status == Skype4Py.cmsReceived:
       sender = msg.Sender
       if not sender.Handle in users_been_greeted:
          if sender.Handle in known_users:
