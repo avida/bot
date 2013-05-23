@@ -14,7 +14,8 @@ def Log(str):
    logfile.flush()
 
 chatname = "#mika.rez/$kallagen;4dd32678e90d0523"
-testname = "#test454515/$avida.d3;f29bc3eff39e4bd4"
+testname = "#test454515/$avida.d3;e755df567b71784f"
+#chatname = testname
 admiral = 'kallagen'
 phrases = ["Гениально!", "Адмирал все правильно сказал!", 
             "Я люблю Адмирала!", "Так точно!", "Согласен!", 
@@ -44,6 +45,7 @@ known_users = {
    'berdishenko' : 'Бердыщенко',
    'nikolaikopernik' : 'Коперник',
 }
+urlPattern = re.compile(r'\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^%s\s]|/)))')
 users_been_greeted = set()
 chat = None
 logfile = None
@@ -79,13 +81,17 @@ class SkypeBot(object):
             message = 'Зима близится'
          if not message is None:
             chat.SendMessage(message.decode('cp1251'))
-            Log(message)
 
   def MessageStatus(self, msg, status):
       global lastMessageTimestamp
-      if time.mktime(localtime()) - lastAttached < secondsToWait:
-         return
+      if status == Skype4Py.cmsSent:
+         Log(msg.Body.encode('cp1251', errors='ignore'))
       if msg.Chat.Name == chatname and status == Skype4Py.cmsReceived:
+         Log(msg.Body.encode('cp1251', errors='ignore'))
+         #if not urlPattern.search(msg.Body) is None:
+         #  pass
+         if time.mktime(localtime()) - lastAttached < secondsToWait:
+            return
          lastMessageTimestamp =  time.mktime(time.strptime(str(msg.Datetime), "%Y-%m-%d %H:%M:%S"))
          sender = msg.Sender
          if not sender.Handle in users_been_greeted:
@@ -95,24 +101,22 @@ class SkypeBot(object):
                DisplName = sender.FullName.encode('cp1251')
             message = random.choice(greetings) % DisplName
             chat.SendMessage(message.decode('cp1251'))
-            Log(message)
             users_been_greeted.add(sender.Handle)
          else:
             if msg.Sender.Handle == admiral:
                if random.random() < 0.4:
                   message = random.choice(phrases)
                   chat.SendMessage(message.decode('cp1251'))
-                  Log(message)
 
 def renewAnekdots():
-   import urllib
+   import urllib2
    from bs4 import BeautifulSoup
-   page = urllib.urlopen("http://www.anekdot.ru/scripts/rand_anekdot.php?t=j")
+   page = urllib2.urlopen("http://www.anekdot.ru/scripts/rand_anekdot.php?t=j")
    soup = BeautifulSoup(page.read(), from_encoding="cp1251")
    return [ i.getText() for i in soup.findAll(attrs={'class':'text'}) ]
                  
 if __name__ == "__main__":
-  logfile = open('log.txt','a')
+  logfile = open('log-%s.txt' % strftime("%d-%m-%Y", localtime()),'a')
   Log('Log started')
   bot = SkypeBot()
 
@@ -124,4 +128,4 @@ if __name__ == "__main__":
          anekdots = renewAnekdots()
       anek = anekdots.pop()         
       chat.SendMessage(anek)
-      Log(anek.encode('cp1251', errors='ignore'))
+      lastMessageTimestamp = time.mktime(localtime())
