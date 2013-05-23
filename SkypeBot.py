@@ -84,9 +84,11 @@ class SkypeBot(object):
 
   def MessageStatus(self, msg, status):
       global lastMessageTimestamp
+      if msg.Chat.Name != chatname:
+         return
       if status == Skype4Py.cmsSent:
          Log(msg.Body.encode('cp1251', errors='ignore'))
-      if msg.Chat.Name == chatname and status == Skype4Py.cmsReceived:
+      elif status == Skype4Py.cmsReceived:
          Log(msg.Body.encode('cp1251', errors='ignore'))
          #if not urlPattern.search(msg.Body) is None:
          #  pass
@@ -122,7 +124,7 @@ if __name__ == "__main__":
 
   anekdots = renewAnekdots()
   while True:
-    time.sleep(1.0)
+    time.sleep(3.0)
     if time.mktime(localtime()) - lastMessageTimestamp > time4fun:
       if len(anekdots) == 0:
          anekdots = renewAnekdots()
