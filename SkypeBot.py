@@ -50,6 +50,7 @@ known_users = {
    'tussunplus' : 'Макар',
    'berdishenko' : 'Бердыщенко',
    'nikolaikopernik' : 'Коперник',
+   'arttarakan' : 'Таракан',
 }
 urlPattern = re.compile(r'\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^%s\s]|/)))')
 users_been_greeted = set()
