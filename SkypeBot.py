@@ -16,7 +16,10 @@ def Log(str):
 chatname = "#mika.rez/$kallagen;4dd32678e90d0523"
 testname = "#test454515/$avida.d3;f29bc3eff39e4bd4"
 admiral = 'kallagen'
-phrases = ["Гениально!", "Адмирал все правильно сказал!", "Я люблю Адмирала!", "Так точно!", "Согласен!", "Истинно", "Одобряю", "Восхитительно!", "Я тоже так думаю"]
+phrases = ["Гениально!", "Адмирал все правильно сказал!", 
+            "Я люблю Адмирала!", "Так точно!", "Согласен!", 
+            "Истинно", "Одобряю", "Восхитительно!", "Я тоже так думаю",
+            "Адмиралу виднее", "Золотые слова", "(Y)" ]
 greetings = ["Приветствую, %s", "Здравствуй, %s", "Рад тебя видеть, %s" , "(wave), %s", "Доброе утро, %s", "Привет, %s", "Ку, %s"]
 known_users = {
    'hawkeye_atm' : 'Хоукай',
@@ -37,7 +40,9 @@ known_users = {
    'podockonnik' : 'Подоконник',
    'kraken112' : 'Отрава',
    'enotpotoskyn' : 'Глебстер',
-   'tussunplus' : 'Макар'
+   'tussunplus' : 'Макар',
+   'berdishenko' : 'Бердыщенко',
+   'nikolaikopernik' : 'Коперник',
 }
 users_been_greeted = set()
 chat = None
@@ -66,10 +71,15 @@ class SkypeBot(object):
   def OnlineStatus(self, user, status):
       if time.mktime(localtime()) - lastAttached < secondsToWait:
          return
-      if status == Skype4Py.cusOnline and user.Handle == admiral:
-         message = '(*)'
-         chat.SendMessage(message)
-         Log(message)
+      if user.Handle == admiral:
+         mesage = None
+         if status == Skype4Py.cusOnline:
+            message = '(*)'
+         elif status == Skype4Py.cusOffline:
+            message = 'Зима близится'
+         if not message is None:
+            chat.SendMessage(message.decode('cp1251'))
+            Log(message)
 
   def MessageStatus(self, msg, status):
       global lastMessageTimestamp
