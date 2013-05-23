@@ -12,6 +12,12 @@ currentTime = lambda : strftime("%X", localtime())
 def Log(str):
    logfile.write("%s: %s\n"%(currentTime(), str))
    logfile.flush()
+def LogMessage(msg):
+   DisplName = msg.Sender.Handle
+   if DisplName in known_users:
+      DisplName = known_users[DisplName]
+   Log( DisplName+': '+msg.Body.encode('cp1251', errors='ignore'))
+   
 
 chatname = "#mika.rez/$kallagen;4dd32678e90d0523"
 testname = "#test454515/$avida.d3;e755df567b71784f"
@@ -87,9 +93,9 @@ class SkypeBot(object):
       if msg.Chat.Name != chatname:
          return
       if status == Skype4Py.cmsSent:
-         Log(msg.Body.encode('cp1251', errors='ignore'))
+         LogMessage(msg)
       elif status == Skype4Py.cmsReceived:
-         Log(msg.Body.encode('cp1251', errors='ignore'))
+         LogMessage(msg)
          #if not urlPattern.search(msg.Body) is None:
          #  pass
          if time.mktime(localtime()) - lastAttached < secondsToWait:
